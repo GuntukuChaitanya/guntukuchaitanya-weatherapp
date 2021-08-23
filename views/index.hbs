@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>{{title}}</title>
+        <link rel="stylesheet" href="css/styles.css"/> <!-- static path for public folder is already set in app.js -->
+<style>
+@import url(https://fonts.googleapis.com/css?family=Poiret+One);
+@import url(https://cdnjs.cloudflare.com/ajax/libs/weather-icons/2.0.9/css/weather-icons.min.css);
+
+html{
+    height: 100%;
+    background-image: url('https://wallpaperaccess.com/full/1540001.jpg');
+}
+.container{
+    min-height: 100px;
+    width: 500px;
+    box-sizing: border-box;
+    border: 2px solid rgba(255, 0, 0, 0.411);
+    border-radius: 0.6em;
+    background-color: black;
+}
+
+.getLocation{
+    box-sizing: border-box;
+    border-radius: 0.6em;
+    border: 2px solid rgba(255, 0, 0, 0.411);
+    min-width: 30%;
+    min-height: 30%;
+    text-align: center;
+    padding: 10px 10px;
+    margin: 10px 10px;
+}
+
+.center {
+  margin: 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -ms-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+}
+
+input[type=text]{
+    width:90%;
+    padding: 20px 20px;
+    text-align: center;
+    margin: 8px 8px;
+    box-sizing: border-box;
+    border: 2px solid rgba(255, 0, 0, 0.411);
+    border-radius: 4px;
+    border-radius: 0.6em;
+    background-color: black ;
+    color: white;
+
+}
+.btn {
+    width:40%;
+    padding: 10px 10px;
+    text-align: center;
+    margin-left: 25px;
+    margin-right: 25px;
+    box-sizing: border-box;
+    border: 2px solid rgba(255, 0, 0, 0.411);
+    border-radius: 0.6em;
+    background-color:white;
+    color: black;
+    transition-duration: 0.4s;
+}
+.btn:hover{
+    background-color: grey;
+  color: white;
+}
+.weatherInfo{
+    border: 2px solid rgba(255, 0, 0, 0.411);
+    min-height: 40px;
+    box-sizing: border-box;
+    border-radius: 0.6em;
+    color: white;
+    margin: 8px 8px;
+}
+.temp{
+    border: 2px solid rgba(255, 0, 0, 0.411);
+    min-height: 40px;
+    box-sizing: border-box;
+    border-radius: 0.6em;
+    color: white;
+    margin: 8px 8px;
+    text-align: center;
+    padding: 10px 0px ;
+}
+.weatherCondition{
+    border: 2px solid rgba(255, 0, 0, 0.411);
+    min-height: 40px;
+    box-sizing: border-box;
+    border-radius: 0.6em;
+    color: white;
+    margin: 8px 8px;
+    text-align: center;
+    padding: 10px 0px ;
+}
+.location{
+    border: 2px solid rgba(255, 0, 0, 0.411);
+    min-height: 40px;
+    box-sizing: border-box;
+    border-radius: 0.6em;
+    color: white;
+    margin: 8px 8px;
+    text-align: center;
+    padding: 10px 0px ;
+}
+
+</style>
+</head>
+    <body>
+        <div class="container center">
+           <h2 style="text-align: center; color:crimson"><u>{{>header}}</u></h2> 
+            <article class="weatherWidget">
+                <form class="getLocation">
+                    <input placeholder="Enter Location Name" type = "text"> <br>
+                    <button class="btn"> Get Weather Details</button>
+                </form>
+                <div class="weatherInfo">
+                    <div class="location"></div>
+                    <div class="temp"><span></span></div>    
+                    <div class="weatherCondition"></div>    
+                </div>
+            </article>
+        </div>
+<script>
+var fetchWeather = "/weather";
+const weatherForm = document.querySelector('form');
+const search = document.querySelector('input');
+
+const weatherCondition = document.querySelector('.weatherCondition');
+const tempValue = document.querySelector('.temp span');
+const locValue = document.querySelector('.location');
+
+weatherForm.addEventListener('submit',(event)=>{
+    event.preventDefault();
+    console.log(search.value);
+    locValue.textContent="Loading...";
+    tempValue.textContent="Loading..";
+    weatherCondition.textContent="Loading...";
+    const locApi = fetchWeather+"?address="+search.value;
+    fetch(locApi).then(response => {
+        response.json().then(data => {
+            console.log(data);
+            if(data.error){
+                locValue.textContent=data.error;
+                tempValue.textContent=data.error;
+                weatherCondition.textContent=data.error;
+            }
+            else{
+                locValue.textContent=data.locName;
+                tempValue.textContent=(data.temperature -273.5).toFixed(2) + String.fromCharCode(176);
+                weatherCondition.textContent=data.description.toUpperCase();
+            }
+        })
+    });
+})
+</script> 
+</body>
+</html>
